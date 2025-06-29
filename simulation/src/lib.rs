@@ -1,5 +1,4 @@
-pub mod math;
+use math;
 
 fn do_something_productive() {
-    let something = 0;
 }
