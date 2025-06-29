@@ -1,9 +1,9 @@
-use std::intrinsics::sqrtf32;
+use crate::transformations::transformations2d::Transformation2D;
 
 #[derive(Clone, Copy, Debug)]
 pub struct Vec2 {
-    x: f32,
-    y: f32,
+    pub x: f32,
+    pub y: f32,
 }
 
 impl Vec2 {
@@ -28,7 +28,7 @@ impl Vec2 {
     pub fn scale(self, s: f32) -> Vec2 {
         Vec2 {
             x: self.x * s,
-            y: self.x * s,
+            y: self.y * s,
         }
     }
 
@@ -52,4 +52,27 @@ impl Vec2 {
     pub fn zero() -> Vec2 {
         Vec2 { x: 0.0, y: 0.0 }
     }
+
+    pub fn apply_transformation(&self, transformation: Transformation2D) -> Vec2 {
+        // default transformation + displacement/translation
+        let t = transformation.matrix;
+        Vec2 {
+            x: t[0][0] * self.x + t[0][1] * self.y + t[0][2],
+            y: t[1][0] * self.x + t[1][1] * self.y + t[1][2],
+        }
+    }
+}
+
+impl From<[f32; 2]> for Vec2 {
+    fn from(value: [f32; 2]) -> Self {
+        Vec2 {
+            x: value[0],
+            y: value[1],
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    // Tests will be added here
 }

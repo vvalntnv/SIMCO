@@ -1,3 +1,7 @@
+pub mod vectors;
+pub mod transformations;
+pub mod operations;
+
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
 }
