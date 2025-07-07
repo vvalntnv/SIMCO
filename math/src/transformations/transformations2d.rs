@@ -137,9 +137,9 @@ impl Transformation2D {
 
 #[cfg(test)]
 mod tests {
-    use std::f32::consts::PI;
     use super::*;
     use crate::vectors::vec2d::Vec2;
+    use std::f32::consts::PI;
 
     // Helper function to check if two matrices are approximately equal
     fn matrix_approx_eq(a: [[f32; 3]; 3], b: [[f32; 3]; 3], epsilon: Option<f32>) -> bool {
@@ -185,12 +185,8 @@ mod tests {
     fn test_rotation() {
         // Test 90 degree rotation
         let rotation = Transformation2D::rotation(PI / 2.0);
-        let expected = [
-            [0.0, -1.0, 0.0],
-            [1.0, 0.0, 0.0],
-            [0.0, 0.0, 1.0],
-        ];
-        
+        let expected = [[0.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]];
+
         // Use approximate equality for floating point comparisons
         assert!(matrix_approx_eq(rotation.matrix, expected, Some(1e-6)));
 
@@ -267,18 +263,14 @@ mod tests {
         // Test multiplying two transformations
         let translation = Transformation2D::translation(1.0, 2.0);
         let scale = Transformation2D::scale(2.0, 3.0);
-        
+
         // First translate, then scale
         let combined = translation;
         let result = combined.multiply(&scale);
-        
+
         // Expected: scale then translate
-        let expected = [
-            [2.0, 0.0, 1.0],
-            [0.0, 3.0, 2.0],
-            [0.0, 0.0, 1.0],
-        ];
-        
+        let expected = [[2.0, 0.0, 1.0], [0.0, 3.0, 2.0], [0.0, 0.0, 1.0]];
+
         assert_eq!(result.matrix, expected);
 
         // Test applying combined transformation to a vector
@@ -326,14 +318,16 @@ mod tests {
         // Note: For matrix multiplication, A*B != B*A in general
         // We need to test both orders to ensure the inverse is correct
         let trans_copy = translation;
-        let result1 = trans_copy.multiply(&inverse);  
-        
+        let result1 = trans_copy.multiply(&inverse);
+
         // Check if either order gives a result close to the identity matrix
         println!("{:?}", scale);
         println!("{:?}", result1);
-        assert!(
-            matrix_approx_eq(result1.matrix, identity.matrix, Some(1e-5)) 
-        );
+        assert!(matrix_approx_eq(
+            result1.matrix,
+            identity.matrix,
+            Some(1e-5)
+        ));
 
         // Test inverse of singular matrix (should return None)
         let singular = Transformation2D {
@@ -362,13 +356,13 @@ mod tests {
         // 1. Apply translation (1,2) to (1,1) -> (2,3)
         // 2. Apply rotation 90 degrees to (2,3) -> (-3,2)
         // 3. Apply scaling (2,3) to (-3,2) -> (-6,6)
-        
+
         // Verify the result with a small epsilon for floating point comparison
         let expected_x = -6.0;
         let expected_y = 6.0;
 
         println!("{:?}", transformed);
-        
+
         // Use a slightly larger epsilon for the comparison
         assert!(approx_eq(transformed.x, expected_x, Some(1e-5)));
         assert!(approx_eq(transformed.y, expected_y, Some(1e-5)));
